@@ -1,8 +1,8 @@
-import React from "react";
+import React, {ChangeEvent, KeyboardEvent, useState} from "react";
 import {FilterType} from "./App";
 
 export type TasksType = {
-    id: number
+    id: string
     title: string
     isDone: boolean
 }
@@ -10,28 +10,53 @@ export type TasksType = {
 type PropsType = {
     title: string
     tasks: Array<TasksType>
-    removeTask:(taskID: number) => void
-    changeFilter:(value: FilterType) => void
+    removeTask: (taskID: string) => void
+    changeFilter: (value: FilterType) => void
+    addTask: (title: string) => void
 }
 
 export function TodoList(props: PropsType) {
 
-    const changeFilterToAll = () => {props.changeFilter("all")}
-    const changeFilterToActive = () => {props.changeFilter("active")}
-    const changeFilterToCompleted = () => {props.changeFilter("completed")}
+    const [newTitleForTask, setNewTitleForTask] = useState<string>('')
+
+    const addTask = () => {
+        props.addTask(newTitleForTask)
+        setNewTitleForTask('')
+    }
+    const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+        setNewTitleForTask(e.currentTarget.value)
+    }
+    const onKeyPressHandler = (e: KeyboardEvent<HTMLInputElement>) => {
+        if (e.charCode === 13) {
+            addTask()
+        }
+    }
+
+    const changeFilterToAll = () => {
+        props.changeFilter("all")
+    }
+    const changeFilterToActive = () => {
+        props.changeFilter("active")
+    }
+    const changeFilterToCompleted = () => {
+        props.changeFilter("completed")
+    }
 
     return (
         <div>
             <h3>{props.title}</h3>
             <div>
-                <input/>
-                <button>+</button>
+                <input value={newTitleForTask}
+                       onChange={onChangeHandler}
+                       onKeyPress={onKeyPressHandler}
+                />
+                <button onClick={addTask}>+</button>
             </div>
             <ul>
                 {
                     props.tasks.map(t => {
 
-                        const removeTask = () => props.removeTask(t.id)
+                            const removeTask = () => props.removeTask(t.id)
 
                             return (
                                 <li>
