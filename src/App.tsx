@@ -28,6 +28,13 @@ function App() {
         let task = {id: v1(), title: title, isDone: false}
         setTasks([task, ...tasks])
     }
+    function changeStatus(taskID: string, isDone: boolean) {
+        let task = tasks.find(t => t.id === taskID)
+        if(task) {
+            task.isDone = isDone
+            setTasks([...tasks])
+        }
+    }
 
     let tasksForTodoList = tasks
     if (filter === "active") {
@@ -44,6 +51,8 @@ function App() {
                       removeTask={removeTask}
                       changeFilter={changeFilter}
                       addTask={addTask}
+                      changeStatus={changeStatus}
+                      filter={filter}
             />
         </div>
     );
