@@ -68,9 +68,11 @@ function App() {
         const toDoList = toDoLists.filter(tl => tl.id !== toDoListID)
         if(toDoList) {
             setToDoLists([...toDoList])
+            delete tasksObj[toDoListID]
         }
     }
 
+    console.log(tasksObj)
     return (
         <div className="App">
             {
