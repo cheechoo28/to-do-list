@@ -8,14 +8,14 @@ type AddItemPropsType = {
 }
 
 export function AddItem(props: AddItemPropsType) {
-    const [error, setError] = useState<string | null>(null)
+    const [error, setError] = useState<boolean>(false)
     const [newTitleForTask, setNewTitleForTask] = useState<string>('')
 
     const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
         setNewTitleForTask(e.currentTarget.value)
     }
     const onKeyPressHandler = (e: KeyboardEvent<HTMLInputElement>) => {
-        setError(null)
+        setError(false)
         if (e.charCode === 13) {
             addTask()
         }
@@ -25,7 +25,7 @@ export function AddItem(props: AddItemPropsType) {
             props.addItem(newTitleForTask.trim())
             setNewTitleForTask('')
         } else {
-            setError("Title is required!")
+            setError(true)
         }
     }
 
@@ -37,12 +37,12 @@ export function AddItem(props: AddItemPropsType) {
                 value={newTitleForTask}
                 onChange={onChangeHandler}
                 onKeyPress={onKeyPressHandler}
-                error={!!error}
+                error={error}
+                helperText={ error && "Title is required!"}
             />
             <IconButton onClick={addTask}>
                 <AddBox color={"primary"}/>
             </IconButton>
-            {error && <div className={"error-message"}>{error}</div>}
         </div>
     )
 }
