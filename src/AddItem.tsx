@@ -7,7 +7,8 @@ type AddItemPropsType = {
     title: string
 }
 
-export function AddItem(props: AddItemPropsType) {
+export const AddItem = React.memo((props: AddItemPropsType) => {
+    console.log('AddItem is called')
     const [error, setError] = useState<boolean>(false)
     const [newTitleForTask, setNewTitleForTask] = useState<string>('')
 
@@ -15,7 +16,9 @@ export function AddItem(props: AddItemPropsType) {
         setNewTitleForTask(e.currentTarget.value)
     }
     const onKeyPressHandler = (e: KeyboardEvent<HTMLInputElement>) => {
-        setError(false)
+        if (error) {
+            setError(false)
+        }
         if (e.charCode === 13) {
             addTask()
         }
@@ -45,4 +48,4 @@ export function AddItem(props: AddItemPropsType) {
             </IconButton>
         </div>
     )
-}
+})
