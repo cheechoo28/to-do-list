@@ -1,20 +1,17 @@
 import React, {ChangeEvent} from "react";
-import {FilterType} from "./App";
 import {AddItem} from "./AddItem";
 import {EditableSpan} from "./EditableSpan";
 import {Button, Checkbox, IconButton} from "@material-ui/core";
 import {Delete} from "@material-ui/icons";
+import {TaskType} from "./reducers/taskss-reducer";
+import {FilterType} from "./reducers/todolists-reducer";
 
-export type TasksType = {
-    id: string
-    title: string
-    isDone: boolean
-}
+
 
 type PropsType = {
     id: string
     title: string
-    tasks: Array<TasksType>
+    tasks: Array<TaskType>
     filter: FilterType
     removeTask: (taskID: string, toDoListID: string) => void
     changeFilter: (value: FilterType, toDoLIstID: string) => void
