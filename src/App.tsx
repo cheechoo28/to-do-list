@@ -8,19 +8,21 @@ import {RootStateType} from "./store";
 import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC, TasksType} from "./reducers/taskss-reducer";
 import {
     addToDoListAC,
-    changeToDoListFilterAC, changeToDoListTitleAC,
+    changeToDoListFilterAC,
+    changeToDoListTitleAC,
     FilterType,
     removeToDoListAC,
-    ToDoListsType
+    ToDoListDomainType,
 } from "./reducers/todolists-reducer";
 import {TodoList} from "./TodoList";
+import {TaskStatuses} from "./api/tasksAPI";
 
 function App() {
     console.log('App is called')
 
     const dispatch = useDispatch()
     const tasks = useSelector<RootStateType, TasksType>(state => state.tasks)
-    const toDoLists = useSelector<RootStateType, Array<ToDoListsType>>(state => state.toDoLists)
+    const toDoLists = useSelector<RootStateType, Array<ToDoListDomainType>>(state => state.toDoLists)
 
     const removeTask = useCallback( (taskID: string, toDoListId: string) => {
         dispatch(removeTaskAC(taskID, toDoListId))
@@ -34,8 +36,8 @@ function App() {
         dispatch(addTaskAC(title, toDoListId))
     },[dispatch])
 
-    const changeStatus = useCallback( (taskId: string, isDone: boolean, toDoListId: string) => {
-        dispatch(changeTaskStatusAC(taskId, isDone, toDoListId))
+    const changeStatus = useCallback( (taskId: string, status: TaskStatuses, toDoListId: string) => {
+        dispatch(changeTaskStatusAC(taskId, status, toDoListId))
     },[dispatch])
 
     const removeToDoList = useCallback( (toDoListId: string) => {

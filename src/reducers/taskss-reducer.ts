@@ -1,11 +1,7 @@
 import {v1} from "uuid";
 import {AddToDoListActionType, RemoveToDoListActionType} from "./todolists-reducer";
+import {TaskPriorities, TaskStatuses, TaskType} from "../api/tasksAPI";
 
-export type TaskType = {
-    id: string
-    title: string
-    isDone: boolean
-}
 
 export type TasksType = {
     [key: string]: Array<TaskType>
@@ -27,7 +23,7 @@ type ChangeTaskStatusActionType = {
     type: 'CHANGE-TASK-STATUS'
     taskId: string
     toDoListId: string
-    isDone: boolean
+    status: TaskStatuses
 }
 
 type ChangeTaskTitleActionType = {
@@ -62,7 +58,7 @@ export const tasksReducer = (state: initialStateType = initialState, action: Act
         case "ADD-TASK": {
             const copyState = {...state}
             const toDoListTasks = copyState[action.toDoListId]
-            const newTask: TaskType = {id: v1(), title: action.title, isDone: false}
+            const newTask: TaskType = {id: v1(), title: action.title, todoListId: action.toDoListId, status: TaskStatuses.New, addedDate: '', deadline: '', description: '', order: 0, priority: TaskPriorities.Low, startDate: ''}
             copyState[action.toDoListId] = [newTask, ...toDoListTasks]
             return copyState
         }
@@ -71,7 +67,7 @@ export const tasksReducer = (state: initialStateType = initialState, action: Act
                 ...state,
                 [action.toDoListId]: state[action.toDoListId].map(t => {
                     if (t.id === action.taskId) {
-                        return {...t, isDone: action.isDone}
+                        return {...t, status: action.status}
                     } else {
                         return t
                     }
@@ -125,12 +121,12 @@ export const addTaskAC = (title: string, toDoListId: string): AddTaskActionType 
     }
 }
 
-export const changeTaskStatusAC = (taskId: string, isDone: boolean, toDoListId: string): ChangeTaskStatusActionType => {
+export const changeTaskStatusAC = (taskId: string, status: TaskStatuses, toDoListId: string): ChangeTaskStatusActionType => {
     return {
         type: "CHANGE-TASK-STATUS",
         toDoListId,
         taskId,
-        isDone
+        status
     }
 }
 

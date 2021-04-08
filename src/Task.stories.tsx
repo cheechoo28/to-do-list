@@ -3,6 +3,7 @@ import React from 'react';
 import {Meta, Story} from '@storybook/react/types-6-0';
 import {action} from "@storybook/addon-actions";
 import {Task, TaskPropsType} from "./Task";
+import {TaskPriorities, TaskStatuses} from "./api/tasksAPI";
 
 
 export default {
@@ -27,13 +28,13 @@ let baseArgs = {
 export const TaskIsDoneStories = Template.bind({});
 TaskIsDoneStories.args = {
     ...baseArgs,
-    task: {id: '1', title: 'M&M', isDone: true},
+    task: {id: '1', title: 'M&M', todoListId: 'todolistId', status: TaskStatuses.New, addedDate: '', deadline: '', description: '', order: 0, priority: TaskPriorities.Low, startDate: ''},
     toDoListId: 'todolistId'
 };
 
 export const TaskIsNotDoneStories = Template.bind({});
 TaskIsNotDoneStories.args = {
     ...baseArgs,
-    task: {id: '2', title: 'M&M', isDone: false},
+    task: {id: '2', title: 'M&M', todoListId: 'todolistId', status: TaskStatuses.New, addedDate: '', deadline: '', description: '', order: 0, priority: TaskPriorities.Low, startDate: ''},
     toDoListId: 'todolistId'
 };
