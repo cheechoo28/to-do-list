@@ -1,6 +1,5 @@
 import axios from "axios";
 
-
 const instance = axios.create({
     baseURL: 'https://social-network.samuraijs.com/api/1.1/',
     withCredentials: true,
@@ -27,13 +26,13 @@ export  enum TaskPriorities {
 export type TaskType = {
     id: string
     title: string
-    description: null | string
+    description: string
     todoListId: string
     order: number
     status: TaskStatuses
     priority: TaskPriorities
-    startDate: null | string
-    deadline: null | string
+    startDate: string
+    deadline: string
     addedDate: string
 }
 
@@ -50,6 +49,15 @@ type CommonResponseType<D> = {
     resultCode: number
 }
 
+export type ModelType = {
+    title: string
+    description: string
+    status: TaskStatuses
+    priority: TaskPriorities
+    startDate: string
+    deadline: string
+}
+
 export const tasksAPI = {
     getTasks(toDoListId: string) {
         return instance.get<GetTasksResponseType>(`todo-lists/${toDoListId}/tasks`)
@@ -60,7 +68,7 @@ export const tasksAPI = {
     removeTask(toDoListId: string, taskId: string) {
         return instance.delete<CommonResponseType<{}>>(`todo-lists/${toDoListId}/tasks/${taskId}`)
     },
-    updateTask(toDoListId: string, taskId: string, title: string) {
-        return instance.put<CommonResponseType<{item: TaskType}>>(`todo-lists/${toDoListId}/tasks/${taskId}`, {title})
+    updateTask(toDoListId: string, taskId: string, model: ModelType) {
+        return instance.put<CommonResponseType<{item: TaskType}>>(`todo-lists/${toDoListId}/tasks/${taskId}`, model)
     }
 }

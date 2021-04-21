@@ -1,7 +1,7 @@
 import {Provider} from "react-redux";
 import {RootStateType} from "./store";
 import {combineReducers, createStore} from "redux";
-import {tasksReducer} from "./reducers/taskss-reducer";
+import {tasksReducer} from "./reducers/tasks-reducer";
 import {toDoListsReducer} from "./reducers/todolists-reducer";
 import {v1} from "uuid";
 import {TaskPriorities, TaskStatuses} from "./api/tasksAPI";

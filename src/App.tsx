@@ -1,18 +1,19 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import './App.css';
 import {AddItem} from "./AddItem";
 import {AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography} from "@material-ui/core";
 import {Menu} from "@material-ui/icons";
 import {useDispatch, useSelector} from "react-redux";
 import {RootStateType} from "./store";
-import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC, TasksType} from "./reducers/taskss-reducer";
+import {addTaskTC, removeTaskTC, TasksType, updateTaskTC} from "./reducers/tasks-reducer";
 import {
-    addToDoListAC,
+    addToDoListTC,
     changeToDoListFilterAC,
-    changeToDoListTitleAC,
     FilterType,
-    removeToDoListAC,
+    getToDoListsTC,
+    removeToDoListTC,
     ToDoListDomainType,
+    updateToDoListTC,
 } from "./reducers/todolists-reducer";
 import {TodoList} from "./TodoList";
 import {TaskStatuses} from "./api/tasksAPI";
@@ -24,37 +25,41 @@ function App() {
     const tasks = useSelector<RootStateType, TasksType>(state => state.tasks)
     const toDoLists = useSelector<RootStateType, Array<ToDoListDomainType>>(state => state.toDoLists)
 
-    const removeTask = useCallback( (taskID: string, toDoListId: string) => {
-        dispatch(removeTaskAC(taskID, toDoListId))
-    },[dispatch])
+    useEffect(() => {
+        dispatch(getToDoListsTC())
+    }, [])
 
-    const changeFilter = useCallback( (value: FilterType, toDoListId: string) => {
-       dispatch(changeToDoListFilterAC(value, toDoListId))
-    },[dispatch])
+    const removeTask = useCallback((taskID: string, toDoListId: string) => {
+        dispatch(removeTaskTC(toDoListId, taskID))
+    }, [dispatch])
 
-    const addTask = useCallback( (title: string, toDoListId: string) => {
-        dispatch(addTaskAC(title, toDoListId))
-    },[dispatch])
+    const changeFilter = useCallback((value: FilterType, toDoListId: string) => {
+        dispatch(changeToDoListFilterAC(value, toDoListId))
+    }, [dispatch])
 
-    const changeStatus = useCallback( (taskId: string, status: TaskStatuses, toDoListId: string) => {
-        dispatch(changeTaskStatusAC(taskId, status, toDoListId))
-    },[dispatch])
+    const addTask = useCallback((title: string, toDoListId: string) => {
+        dispatch(addTaskTC(toDoListId, title))
+    }, [dispatch])
 
-    const removeToDoList = useCallback( (toDoListId: string) => {
-        dispatch(removeToDoListAC(toDoListId))
-    },[dispatch])
+    const changeStatus = useCallback((taskId: string, status: TaskStatuses, toDoListId: string) => {
+        dispatch(updateTaskTC(toDoListId, taskId, {status}))
+    }, [dispatch])
 
-    const addToDoList = useCallback( (titleForToDoList: string) => {
-       dispatch(addToDoListAC(titleForToDoList))
-    },[dispatch])
+    const removeToDoList = useCallback((toDoListId: string) => {
+        dispatch(removeToDoListTC(toDoListId))
+    }, [dispatch])
 
-    const changeTaskTitle = useCallback( (taskId: string, newTitle: string, toDoListId: string) => {
-        dispatch(changeTaskTitleAC(taskId, newTitle, toDoListId))
-    },[dispatch])
+    const addToDoList = useCallback((titleForToDoList: string) => {
+        dispatch(addToDoListTC(titleForToDoList))
+    }, [dispatch])
+
+    const changeTaskTitle = useCallback((taskId: string, newTitle: string, toDoListId: string) => {
+        dispatch(updateTaskTC(toDoListId, taskId, {title: newTitle}))
+    }, [dispatch])
 
     const changeTitleToDoList = useCallback((toDoListId: string, newTitle: string) => {
-       dispatch(changeToDoListTitleAC(toDoListId, newTitle))
-    },[dispatch])
+        dispatch(updateToDoListTC(toDoListId, newTitle))
+    }, [dispatch])
 
     return (
         <div className="App">
@@ -75,8 +80,6 @@ function App() {
                 </Grid>
                 <Grid container spacing={5}>
                     {
-
-
                         toDoLists.map(tl => {
 
                             const tasksForToDoList = tasks[tl.id]

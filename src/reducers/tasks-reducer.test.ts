@@ -1,11 +1,11 @@
 import {
     addTaskAC,
     changeTaskStatusAC,
-    changeTaskTitleAC,
+    updateTaskAC,
     removeTaskAC,
     tasksReducer,
     TasksType
-} from "./taskss-reducer";
+} from "./tasks-reducer";
 
 import {addToDoListAC, removeToDoListAC} from "./todolists-reducer";
 import {TaskPriorities, TaskStatuses} from "../api/tasksAPI";
@@ -58,7 +58,7 @@ test('status of specified task should be changed', () => {
 test('title of specified task should be changed', () => {
 
 
-    const endState = tasksReducer(startState, changeTaskTitleAC('2', 'M&M', "todolistId2"))
+    const endState = tasksReducer(startState, updateTaskAC('2', 'M&M', "todolistId2"))
 
     expect(endState["todolistId2"][1].title).toBe('M&M')
     expect(endState["todolistId1"][1].title).toBe('JS')
