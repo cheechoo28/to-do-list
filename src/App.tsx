@@ -1,11 +1,21 @@
 import React, {useCallback, useEffect} from 'react';
 import './App.css';
-import {AddItem} from "./AddItem";
-import {AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography} from "@material-ui/core";
+import {AddItem} from "./components/AddItemForm/AddItem";
+import {
+    AppBar,
+    Button,
+    Container,
+    Grid,
+    IconButton,
+    LinearProgress,
+    Paper,
+    Toolbar,
+    Typography
+} from "@material-ui/core";
 import {Menu} from "@material-ui/icons";
 import {useDispatch, useSelector} from "react-redux";
-import {RootStateType} from "./store";
-import {addTaskTC, removeTaskTC, TasksType, updateTaskTC} from "./reducers/tasks-reducer";
+import {RootStateType} from "./redux/store";
+import {addTaskTC, removeTaskTC, TasksType, updateTaskTC} from "./redux/tasks-reducer";
 import {
     addToDoListTC,
     changeToDoListFilterAC,
@@ -14,18 +24,28 @@ import {
     removeToDoListTC,
     ToDoListDomainType,
     updateToDoListTC,
-} from "./reducers/todolists-reducer";
+} from "./redux/todolists-reducer";
 import {TodoList} from "./TodoList";
 import {TaskStatuses} from "./api/tasksAPI";
+import {RequestStatusType} from "./redux/app-reducer";
+import {ErrorSnackbar} from "./components/ErrorSnackbar/ErrorSnackbar";
 
-function App() {
+type AppPropsType = {
+    demo?: boolean
+}
+
+function App({demo = false}: AppPropsType) {
     console.log('App is called')
 
     const dispatch = useDispatch()
     const tasks = useSelector<RootStateType, TasksType>(state => state.tasks)
     const toDoLists = useSelector<RootStateType, Array<ToDoListDomainType>>(state => state.toDoLists)
+    const status = useSelector<RootStateType, RequestStatusType>(state => state.app.status)
 
     useEffect(() => {
+        if (demo) {
+            return
+        }
         dispatch(getToDoListsTC())
     }, [])
 
@@ -74,10 +94,13 @@ function App() {
                     <Button color="inherit">Login</Button>
                 </Toolbar>
             </AppBar>
+            {status === 'loading' && <LinearProgress/>}
+            <ErrorSnackbar/>
             <Container fixed>
                 <Grid container style={{padding: '20px 0'}}>
                     <AddItem addItem={addToDoList} title={"TodoList title..."}/>
                 </Grid>
+
                 <Grid container spacing={5}>
                     {
                         toDoLists.map(tl => {
@@ -87,15 +110,14 @@ function App() {
                             return <Grid key={tl.id} item>
                                 <Paper style={{padding: "20px"}} elevation={10}>
                                     <TodoList
+                                        toDoList={tl}
                                         key={tl.id}
-                                        id={tl.id}
-                                        title={tl.title}
+                                        demo={demo}
                                         tasks={tasksForToDoList}
                                         removeTask={removeTask}
                                         changeFilter={changeFilter}
                                         addTask={addTask}
                                         changeStatus={changeStatus}
-                                        filter={tl.filter}
                                         removeToDoList={removeToDoList}
                                         changeTitle={changeTaskTitle}
                                         changeTitleToDoList={changeTitleToDoList}

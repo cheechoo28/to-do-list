@@ -13,6 +13,6 @@ export default {
 
 
 
-const Template: Story = () => <App />;
+const Template: Story = () => <App demo={true} />;
 
 export const AppStories = Template.bind({});

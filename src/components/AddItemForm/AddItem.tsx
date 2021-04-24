@@ -5,9 +5,10 @@ import {AddBox} from "@material-ui/icons";
 export type AddItemPropsType = {
     addItem: (changeTitle: string) => void
     title: string
+    disabled?: boolean
 }
 
-export const AddItem = React.memo((props: AddItemPropsType) => {
+export const AddItem = React.memo(({addItem, disabled = false, ...props}: AddItemPropsType) => {
     console.log('AddItem is called')
     const [error, setError] = useState<boolean>(false)
     const [newTitleForTask, setNewTitleForTask] = useState<string>('')
@@ -25,7 +26,7 @@ export const AddItem = React.memo((props: AddItemPropsType) => {
     }
     const addTask = () => {
         if (newTitleForTask.trim() !== '') {
-            props.addItem(newTitleForTask.trim())
+            addItem(newTitleForTask.trim())
             setNewTitleForTask('')
         } else {
             setError(true)
@@ -35,6 +36,7 @@ export const AddItem = React.memo((props: AddItemPropsType) => {
     return (
         <div>
             <TextField
+                disabled={disabled}
                 variant={"outlined"}
                 label={[props.title]}
                 value={newTitleForTask}
@@ -43,8 +45,8 @@ export const AddItem = React.memo((props: AddItemPropsType) => {
                 error={error}
                 helperText={ error && "Title is required!"}
             />
-            <IconButton onClick={addTask}>
-                <AddBox color={"primary"}/>
+            <IconButton color={"primary"} onClick={addTask} disabled={disabled}>
+                <AddBox />
             </IconButton>
         </div>
     )
